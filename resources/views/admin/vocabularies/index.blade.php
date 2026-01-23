@@ -102,7 +102,7 @@
                                         <form action="{{ route('vocabularies.destroy', $vocab->id) }}" method="POST"
                                             class="d-inline" onsubmit="return confirm('Bạn có chắc muốn xóa từ vựng này?')">
                                             @csrf @method('DELETE')
-                                            <button class="text-danger text-decoration-none ">
+                                            <button class="text-danger text-decoration-none bg-transparent border-0 ">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                         </form>
@@ -132,7 +132,7 @@
             {{-- ===== PAGINATION ===== --}}
             @if ($vocabularies->hasPages())
                 <div class="p-3 border-top">
-                    {{ $vocabularies->links() }}
+                    {{ $vocabularies->appends(request()->query())->links('pagination::bootstrap-5') }}
                 </div>
             @endif
         </div>

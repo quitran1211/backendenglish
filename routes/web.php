@@ -1,7 +1,12 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Admin\BlogCategoryController;
+use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\BlogTagController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ExerciseController;
+use App\Http\Controllers\Admin\ExerciseOptionController;
 use App\Http\Controllers\Admin\LessonsController;
 use App\Http\Controllers\Admin\LevelsController;
 use App\Http\Controllers\Admin\QuizController;
@@ -165,6 +170,92 @@ Route::prefix('admin')->middleware('loginadmin')->group(function () {
         Route::post('/bulk-action', [UsersController::class, 'bulkAction'])->name('bulkAction');
         Route::get('/export', [UsersController::class, 'export'])->name('export');
     });
+
+    Route::prefix('blog')->name('blog.')->group(function () {
+
+        // ===== POSTS =====
+        Route::get('/', [BlogController::class, 'index'])->name('index');
+        Route::get('create', [BlogController::class, 'create'])->name('create');
+        Route::post('/', [BlogController::class, 'store'])->name('store');
+
+        Route::get('trash', [BlogController::class, 'trash'])->name('trash');
+        Route::post('bulk-action', [BlogController::class, 'bulkAction'])->name('bulk');
+
+        Route::post('{post}/toggle-featured', [BlogController::class, 'toggleFeatured'])->name('toggle-featured');
+        Route::get('{post}/toggle-published', [BlogController::class, 'togglePublished'])->name('toggle-published');
+
+        Route::post('{id}/restore', [BlogController::class, 'restore'])->name('restore');
+        Route::delete('{id}/force-delete', [BlogController::class, 'forceDelete'])->name('force-delete');
+
+        // ===== CATEGORIES =====
+        Route::prefix('categories')->name('categories.')->group(function () {
+            Route::get('/', [BlogCategoryController::class, 'index'])->name('index');
+            Route::post('/', [BlogCategoryController::class, 'store'])->name('store');
+            Route::get('trash', [BlogCategoryController::class, 'trash'])->name('trash');
+
+            Route::put('{category}', [BlogCategoryController::class, 'update'])->name('update');
+            Route::delete('{category}', [BlogCategoryController::class, 'destroy'])->name('destroy');
+            Route::post('{id}/restore', [BlogCategoryController::class, 'restore'])->name('restore');
+            Route::post('reorder', [BlogCategoryController::class, 'reorder'])->name('reorder');
+        });
+
+        // ===== TAGS =====
+        Route::prefix('tags')->name('tags.')->group(function () {
+            Route::get('/', [BlogTagController::class, 'index'])->name('index');
+            Route::post('/', [BlogTagController::class, 'store'])->name('store');
+            Route::put('{tag}', [BlogTagController::class, 'update'])->name('update');
+            Route::delete('{tag}', [BlogTagController::class, 'destroy'])->name('destroy');
+            Route::get('search', [BlogTagController::class, 'search'])->name('search');
+            Route::post('quick-create', [BlogTagController::class, 'quickCreate'])->name('quick-create');
+            Route::post('merge', [BlogTagController::class, 'merge'])->name('merge');
+        });
+
+        // ===== DYNAMIC ROUTES (luôn đặt sau cùng) =====
+        Route::get('{post}', [BlogController::class, 'show'])->name('show');
+        Route::get('{post}/edit', [BlogController::class, 'edit'])->name('edit');
+        Route::put('{post}', [BlogController::class, 'update'])->name('update');
+        Route::delete('{post}', [BlogController::class, 'destroy'])->name('destroy');
+
+    });
+    // ================= EXERCISES =================
+    Route::prefix('exercises')->name('exercises.')
+        ->controller(ExerciseController::class)
+        ->group(function () {
+
+            Route::get('/', 'index')->name('index');
+            Route::get('create', 'create')->name('create');
+            Route::post('/', 'store')->name('store');
+            Route::get('lessons/{lesson}/vocabularies', 'getVocabularies')->name('lessons.vocabularies');
+            Route::get('trash', 'trash')->name('trash');
+            Route::post('{exercise}/restore', 'restore')->name('restore');
+            Route::delete('{exercise}/force', 'forceDelete')->name('force');
+
+            Route::get('{exercise}', 'show')->name('show');
+            Route::get('{exercise}/edit', 'edit')->name('edit');
+            Route::put('{exercise}', 'update')->name('update');
+            Route::delete('{exercise}', 'destroy')->name('destroy');
+        });
+
+    // ================= EXERCISE OPTIONS =================
+    Route::prefix('exercises/{exercise}/options')
+        ->name('exercise.options.')
+        ->group(function () {
+
+            // TRASH
+            Route::get('trash', [ExerciseOptionController::class, 'trash'])->name('trash');
+            Route::put('{option}/restore', [ExerciseOptionController::class, 'restore'])->name('restore');
+            Route::delete('{option}/force-delete', [ExerciseOptionController::class, 'forceDelete'])->name('forceDelete');
+
+            // CRUD
+            Route::get('/', [ExerciseOptionController::class, 'index'])->name('index');
+            Route::get('create', [ExerciseOptionController::class, 'create'])->name('create');
+            Route::post('/', [ExerciseOptionController::class, 'store'])->name('store');
+
+            Route::get('{option}', [ExerciseOptionController::class, 'show'])->name('show');
+            Route::get('{option}/edit', [ExerciseOptionController::class, 'edit'])->name('edit');
+            Route::put('{option}', [ExerciseOptionController::class, 'update'])->name('update');
+            Route::delete('{option}', [ExerciseOptionController::class, 'destroy'])->name('destroy');
+        });
 
 });
 

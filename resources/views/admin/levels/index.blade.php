@@ -147,7 +147,7 @@
                                         <form action="{{ route('levels.destroy', $level->id) }}" method="POST"
                                             class="d-inline" onsubmit="return confirm('Bạn có chắc muốn xóa cấp độ này?')">
                                             @csrf @method('DELETE')
-                                            <button class="text-danger text-decoration-none ">
+                                            <button class="text-danger text-decoration-none border-0 bg-transparent">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                         </form>
@@ -176,7 +176,7 @@
             </div>
 
             <div class="p-3 border-top">
-                {{ $levels->links() }}
+                {{ $levels->appends(request()->query())->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>

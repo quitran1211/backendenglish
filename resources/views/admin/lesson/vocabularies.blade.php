@@ -75,7 +75,11 @@
                                             {{ $vocab->meaning_en ?? '-' }}
                                         </td>
 
-                                        <td class="text-center">
+                                        <td class="text-center d-inline-flex align-items-center gap-3">
+                                            <a href="{{ route('vocabularies.edit', $vocab->id) }}"
+                                                class="text-primary text-decoration-none">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </a>
                                             <form
                                                 action="{{ route('lesson.removeVocabulary', [$lesson->id, $vocab->id]) }}"
                                                 method="POST" onsubmit="return confirm('Xóa từ vựng này khỏi bài học?')">

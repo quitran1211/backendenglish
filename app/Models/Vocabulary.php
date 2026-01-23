@@ -69,4 +69,9 @@ class Vocabulary extends Model
     {
         return $query->where('is_active', true);
     }
+
+    public function exercises()
+    {
+        return $this->hasMany(Exercise::class, 'vocabulary_id');
+    }
 }

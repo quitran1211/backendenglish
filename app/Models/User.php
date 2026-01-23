@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class User extends Model
 {
     protected $fillable = [
-        'username', 'email', 'password', 'role',
+        'username', 'email', 'password', 'role', 'full_name',    'target_score',
+
     ];
 
     // Relationships
@@ -19,5 +20,10 @@ class User extends Model
     public function lessonCompletions()
     {
         return $this->hasMany(UserLessonCompletion::class);
+    }
+
+    public function progress()
+    {
+        return $this->hasMany(UserProgress::class, 'user_id');
     }
 }

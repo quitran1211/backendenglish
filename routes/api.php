@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\DictionaryController;
+use App\Http\Controllers\Api\ExerciseController;
 use App\Http\Controllers\Api\LessonController;
 use App\Http\Controllers\Api\LevelController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\QuizController;
 use App\Http\Controllers\Api\QuizQuestionController;
 use App\Http\Controllers\Api\QuizResultController;
@@ -43,4 +46,26 @@ Route::prefix('quiz-results')->group(function () {
     Route::get('/stats', [QuizResultController::class, 'getStats']);
     Route::get('/check', [QuizResultController::class, 'checkCompleted']);
     Route::get('/vocabulary-errors', [QuizResultController::class, 'getVocabularyErrors']);
+});
+Route::prefix('blog')->group(function () {
+    Route::get('posts', [BlogController::class, 'index']);
+    Route::get('posts/{slug}', [BlogController::class, 'show']);
+    Route::get('categories', [BlogController::class, 'categories']);
+    Route::get('tags', [BlogController::class, 'tags']);
+    Route::get('popular', [BlogController::class, 'popular']);
+    Route::get('featured', [BlogController::class, 'featured']);
+    Route::get('related/{slug}', [BlogController::class, 'related']);
+    Route::post('posts/{slug}/view', [BlogController::class, 'increaseView']);
+
+});
+Route::prefix('profile')->group(function () {
+    Route::get('users/{userId}', [ProfileController::class, 'showByUserId']);
+    Route::post('users/{userId}', [ProfileController::class, 'updateByUserId']);
+});
+Route::prefix('exercises')->group(function () {
+    Route::get('/', [ExerciseController::class, 'index']);          // ?lesson_id=1
+    Route::post('/submit', [ExerciseController::class, 'submit']);
+
+    // optional
+    Route::post('/generate', [ExerciseController::class, 'generate']);
 });
