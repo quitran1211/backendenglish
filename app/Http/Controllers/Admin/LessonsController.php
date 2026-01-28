@@ -473,6 +473,23 @@ class LessonsController extends Controller
     /**
      * Bulk actions.
      */
+    public function bulkUpdateAccess(Request $request)
+    {
+        $validated = $request->validate([
+            'lesson_ids' => 'required|array',
+            'lesson_ids.*' => 'exists:lessons,id',
+            'is_free' => 'required|boolean',
+        ]);
+
+        Lesson::whereIn('id', $validated['lesson_ids'])
+            ->update(['is_free' => $validated['is_free']]);
+
+        $type = $validated['is_free'] ? 'miễn phí' : 'premium';
+        $count = count($validated['lesson_ids']);
+
+        return back()->with('success', "Đã cập nhật {$count} bài học thành {$type}!");
+    }
+
     public function bulkAction(Request $request)
     {
         $request->validate([

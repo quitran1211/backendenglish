@@ -187,4 +187,15 @@ class Lesson extends Model
             // You can add logic here if needed
         });
     }
+
+    public function isPremium(): bool
+    {
+        return ! $this->is_free;
+    }
+
+    // Scope: bài premium
+    public function scopePremium($query)
+    {
+        return $query->where('is_free', false);
+    }
 }

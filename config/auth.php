@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'api' => [                    // ⭐ BẮT BUỘC
+            'driver' => 'sanctum',
+            'provider' => 'users',
+        ],
 
         'admin' => [
             'driver' => 'session',

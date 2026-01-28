@@ -9,8 +9,11 @@ use App\Http\Controllers\Admin\ExerciseController;
 use App\Http\Controllers\Admin\ExerciseOptionController;
 use App\Http\Controllers\Admin\LessonsController;
 use App\Http\Controllers\Admin\LevelsController;
+use App\Http\Controllers\Admin\PaymentTransactionController;
 use App\Http\Controllers\Admin\QuizController;
 use App\Http\Controllers\Admin\QuizQuestionController;
+use App\Http\Controllers\Admin\SubscriptionController;
+use App\Http\Controllers\Admin\SubscriptionPlanController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\VocabularyController;
 
@@ -33,6 +36,8 @@ Route::prefix('admin')->middleware('loginadmin')->group(function () {
         Route::delete('/{id}/force-delete', [LessonsController::class, 'forceDelete'])->name('lesson.forceDelete');
 
         // Toggle
+        Route::post('bulk-update-access', [LessonsController::class, 'bulkUpdateAccess'])
+            ->name('lesson.bulkUpdateAccess');
         Route::get('{lesson}/toggle-status', [LessonsController::class, 'toggleStatus'])
             ->name('lesson.toggleStatus');
         Route::get('{lesson}/toggle-free', [LessonsController::class, 'toggleFree'])
@@ -255,6 +260,96 @@ Route::prefix('admin')->middleware('loginadmin')->group(function () {
             Route::get('{option}/edit', [ExerciseOptionController::class, 'edit'])->name('edit');
             Route::put('{option}', [ExerciseOptionController::class, 'update'])->name('update');
             Route::delete('{option}', [ExerciseOptionController::class, 'destroy'])->name('destroy');
+        });
+    // ================= SUBSCRIPTION PLANS =================
+    Route::prefix('subscription-plans')->name('subscription-plans.')
+        ->controller(SubscriptionPlanController::class)
+        ->group(function () {
+
+            Route::get('/', 'index')->name('index');
+            Route::get('create', 'create')->name('create');
+            Route::post('/', 'store')->name('store');
+
+            // Trash
+            Route::get('trash', 'trash')->name('trash');
+            Route::post('{id}/restore', 'restore')->name('restore');
+            Route::delete('{id}/force-delete', 'forceDelete')->name('forceDelete');
+
+            // Toggle
+            Route::get('{subscriptionPlan}/toggle-active', 'toggleActive')->name('toggleActive');
+
+            // CRUD (đặt sau cùng)
+            Route::get('{subscriptionPlan}', 'show')->name('show');
+            Route::get('{subscriptionPlan}/edit', 'edit')->name('edit');
+            Route::put('{subscriptionPlan}', 'update')->name('update');
+            Route::delete('{subscriptionPlan}', 'destroy')->name('destroy');
+        });
+
+    // ================= SUBSCRIPTIONS =================
+    Route::prefix('subscriptions')->name('subscriptions.')
+        ->controller(SubscriptionController::class)
+        ->group(function () {
+
+            Route::get('/', 'index')->name('index');
+            Route::get('create', 'create')->name('create');
+            Route::post('/', 'store')->name('store');
+
+            // Trash
+            Route::get('trash', 'trash')->name('trash');
+            Route::post('{id}/restore', 'restore')->name('restore');
+            Route::delete('{id}/force-delete', 'forceDelete')->name('forceDelete');
+
+            // Actions
+            Route::put('{subscription}/cancel', 'cancel')->name('cancel');
+            Route::post('{subscription}/extend', 'extend')->name('extend');
+            Route::post('check-expired', 'checkExpired')->name('checkExpired');
+
+            // Bulk actions
+            Route::post('bulk-action', 'bulkAction')->name('bulkAction');
+            Route::get('export', 'export')->name('export');
+
+            // Stats
+            Route::get('expiring-soon', 'expiringSoon')->name('expiringSoon');
+            Route::get('revenue-report', 'revenueReport')->name('revenueReport');
+
+            // CRUD (đặt sau cùng)
+            Route::get('{subscription}', 'show')->name('show');
+            Route::get('{subscription}/edit', 'edit')->name('edit');
+            Route::put('{subscription}', 'update')->name('update');
+            Route::delete('{subscription}', 'destroy')->name('destroy');
+        });
+
+    // ================= PAYMENT TRANSACTIONS =================
+    Route::prefix('transactions')->name('transactions.')
+        ->controller(PaymentTransactionController::class)
+        ->group(function () {
+
+            Route::get('/', 'index')->name('index');
+
+            // Routes mới cho approve/reject
+            Route::post('{transaction}/approve', 'approve')->name('approve');
+            Route::post('{transaction}/reject', 'reject')->name('reject');
+            Route::delete('{transaction}/proof', 'deleteProof')->name('deleteProof');
+            Route::get('{id}/proof-image', 'showProofImage')->name('proof.image');
+
+            // Stats & Reports
+            Route::get('stats', 'stats')->name('stats');
+            Route::get('export', 'export')->name('export');
+            Route::get('revenue-by-month', 'revenueByMonth')->name('revenueByMonth');
+
+            // Trash
+            Route::get('trash', 'trash')->name('trash');
+            Route::post('{id}/restore', 'restore')->name('restore');
+            Route::delete('{id}/force-delete', 'forceDelete')->name('forceDelete');
+
+            // Actions
+            Route::post('{transaction}/update-status', 'updateStatus')->name('updateStatus');
+            Route::post('{transaction}/refund', 'refund')->name('refund');
+            Route::post('bulk-action', 'bulkAction')->name('bulkAction');
+
+            // CRUD (đặt sau cùng)
+            Route::get('{transaction}', 'show')->name('show');
+            Route::delete('{transaction}', 'destroy')->name('destroy');
         });
 
 });

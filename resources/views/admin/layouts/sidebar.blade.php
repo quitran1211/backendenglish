@@ -93,6 +93,59 @@
                 </li>
             </ul>
         </li>
+        {{-- PREMIUM / DOANH THU --}}
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-2
+       {{ request()->routeIs('subscription-plan.*') ||
+       request()->routeIs('subscriptions.*') ||
+       request()->routeIs('premium.lessons.*')
+           ? 'active'
+           : '' }}"
+                data-bs-toggle="collapse" href="#premiumMenu" role="button"
+                aria-expanded="{{ request()->routeIs('subscription-plan.*') ||
+                request()->routeIs('subscriptions.*') ||
+                request()->routeIs('premium.lessons.*')
+                    ? 'true'
+                    : 'false' }}">
+                <i class="fa-solid fa-crown text-warning"></i>
+                Quản lý Premium
+                <i class="fa-solid fa-chevron-down ms-auto"></i>
+            </a>
+
+            <ul class="collapse nav flex-column ms-4 mt-1
+        {{ request()->routeIs('subscription-plan.*') ||
+        request()->routeIs('subscriptions.*') ||
+        request()->routeIs('premium.lessons.*')
+            ? 'show'
+            : '' }}"
+                id="premiumMenu">
+
+                <li class="nav-item">
+                    <a href="{{ route('subscription-plans.index') }}"
+                        class="nav-link text-white-50
+               {{ request()->routeIs('subscription-plans.*') ? 'active' : '' }}">
+                        <i class="fa-solid fa-box-open me-2"></i>
+                        Gói học
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('subscriptions.index') }}"
+                        class="nav-link text-white-50
+               {{ request()->routeIs('subscriptions.*') ? 'active' : '' }}">
+                        <i class="fa-solid fa-users-line me-2"></i>
+                        User đăng kí
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('transactions.index') }}"
+                class="nav-link d-flex align-items-center gap-2
+               {{ request()->routeIs('transactions.*') ? 'active' : '' }}">
+                <i class="fa-solid fa-credit-card"></i> Quản lý giao dịch
+            </a>
+        </li>
+
 
         {{-- Người dùng --}}
         <li class="nav-item">
